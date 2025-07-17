@@ -1,6 +1,6 @@
 package org.mellowd.intermediate.executable.statements;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mellowd.compiler.ExecutionEnvironment;
 import org.mellowd.intermediate.NullOutput;
 import org.mellowd.intermediate.QualifiedName;
@@ -11,7 +11,8 @@ import org.mellowd.primitives.Pitch;
 import org.mellowd.testutil.CompilerTestFrame;
 import org.mellowd.testutil.TestEnvironment;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class OnceStatementTest extends CompilerTestFrame {
     public OnceStatementTest() {
@@ -52,7 +53,7 @@ public class OnceStatementTest extends CompilerTestFrame {
                 env.getMemory().get(QualifiedName.ofUnqualified("mel"), Melody.class));
     }
 
-    @Test(expected = AlreadyDefinedException.class)
+    @Test
     public void doubleDefineThrows() {
         super.init("def mel -> [c]");
 
@@ -63,6 +64,8 @@ public class OnceStatementTest extends CompilerTestFrame {
 
         // Executing twice would throw an exception if not in a "once"
         stmt.execute(env, NullOutput.getInstance());
-        stmt.execute(env, NullOutput.getInstance());
+        assertThrows(AlreadyDefinedException.class, () -> {
+            stmt.execute(env, NullOutput.getInstance());
+        });
     }
 }

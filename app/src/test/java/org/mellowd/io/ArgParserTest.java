@@ -1,12 +1,9 @@
 package org.mellowd.io;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(JUnit4.class)
 public class ArgParserTest {
 
     private static void testThrowsException(String failMessage, String... args) {
@@ -21,26 +18,26 @@ public class ArgParserTest {
 
     @Test
     public void timeSigFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "--timesig", "3", "8"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertEquals("Incorrect time signature numerator set in the options", 3, options.getTimeSignatureTop());
-        assertEquals("Incorrect time signature denominator set in the options", 8, options.getTimeSignatureBottom());
+        assertEquals(3, options.getTimeSignatureTop(), "Incorrect time signature numerator set in the options");
+        assertEquals(8, options.getTimeSignatureBottom(), "Incorrect time signature denominator set in the options");
     }
 
     @Test
     public void timeSigShortFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "-ts", "14", "16"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertEquals("Incorrect time signature numerator set in the options", 14, options.getTimeSignatureTop());
-        assertEquals("Incorrect time signature denominator set in the options", 16, options.getTimeSignatureBottom());
+        assertEquals(14, options.getTimeSignatureTop(), "Incorrect time signature numerator set in the options");
+        assertEquals(16, options.getTimeSignatureBottom(), "Incorrect time signature denominator set in the options");
     }
 
     @Test
@@ -65,24 +62,24 @@ public class ArgParserTest {
 
     @Test
     public void tempoFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "--tempo", "130"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertEquals("Incorrect tempo set in the options", 130, options.getTempo());
+        assertEquals(130, options.getTempo(), "Incorrect tempo set in the options");
     }
 
     @Test
     public void tempoShortFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "-t", "160"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertEquals("Incorrect tempo set in options", 160, options.getTempo());
+        assertEquals(160, options.getTempo(), "Incorrect tempo set in options");
     }
 
     @Test
@@ -109,24 +106,24 @@ public class ArgParserTest {
 
     @Test
     public void outDirFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "--outdir", "build"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertEquals("Incorrect output directory set in the options", "build", options.getOutputDirectory());
+        assertEquals("build", options.getOutputDirectory(), "Incorrect output directory set in the options");
     }
 
     @Test
     public void outDirShortFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "-o", "build"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertEquals("Incorrect output directory set in the options", "build", options.getOutputDirectory());
+        assertEquals("build", options.getOutputDirectory(), "Incorrect output directory set in the options");
     }
 
     @Test
@@ -138,36 +135,36 @@ public class ArgParserTest {
 
     @Test
     public void sourceFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "--src", "src1"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertEquals("Source directory not added to the options", "src1", options.getSourceDirs().get(0));
+        assertEquals("src1", options.getSourceDirs().get(0), "Source directory not added to the options");
     }
 
     @Test
     public void sourceShortFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "-s", "src1"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertEquals("Source directory not added to the options", "src1", options.getSourceDirs().get(0));
+        assertEquals("src1", options.getSourceDirs().get(0), "Source directory not added to the options");
     }
 
     @Test
     public void sourceFlagMultiple() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "--src", "src1", "--src", "src2"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertEquals("Source directory not properly added to the options", "src1", options.getSourceDirs().get(0));
-        assertEquals("Second source directory not properly added to ", "src2", options.getSourceDirs().get(1));
+        assertEquals("src1", options.getSourceDirs().get(0), "Source directory not properly added to the options");
+        assertEquals("src2", options.getSourceDirs().get(1), "Second source directory not properly added to ");
     }
 
     @Test
@@ -179,36 +176,36 @@ public class ArgParserTest {
 
     @Test
     public void soundFontFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "--soundfont", "font.sf2"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertEquals("Sound font not added to the options", "font.sf2", options.getSoundFonts().get(0));
+        assertEquals("font.sf2", options.getSoundFonts().get(0), "Sound font not added to the options");
     }
 
     @Test
     public void soundFontShortFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "-sf", "font.sf2"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertEquals("Sound font not added to the options", "font.sf2", options.getSoundFonts().get(0));
+        assertEquals("font.sf2", options.getSoundFonts().get(0), "Sound font not added to the options");
     }
 
     @Test
     public void soundFontFlagMultiple() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "--soundfont", "font.sf2", "--soundfont", "font1.sf2"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertEquals("Sound font not properly added to the options", "font.sf2", options.getSoundFonts().get(0));
-        assertEquals("Second sound font not properly added to ", "font1.sf2", options.getSoundFonts().get(1));
+        assertEquals("font.sf2", options.getSoundFonts().get(0), "Sound font not properly added to the options");
+        assertEquals("font1.sf2", options.getSoundFonts().get(1), "Second sound font not properly added to ");
     }
 
     @Test
@@ -220,127 +217,127 @@ public class ArgParserTest {
 
     @Test
     public void playFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "--play"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertTrue("Play flag not set when --play is given", options.shouldPlayLive());
-        assertFalse("MIDI output flag is set when --play is given", options.shouldOutputMIDI());
-        assertFalse("WAVE output flag is set when --play is given", options.shouldOutputWAV());
+        assertTrue(options.shouldPlayLive());
+        assertFalse(options.shouldOutputMIDI(), "MIDI output flag is set when --play is given");
+        assertFalse(options.shouldOutputWAV(), "WAVE output flag is set when --play is given");
     }
 
     @Test
     public void playShortFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "-p"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertTrue("Play flag not set when -p is given", options.shouldPlayLive());
-        assertFalse("MIDI output flag is set when -p is given", options.shouldOutputMIDI());
-        assertFalse("WAVE output flag is set when -p is given", options.shouldOutputWAV());
+        assertTrue(options.shouldPlayLive(), "Play flag not set when -p is given");
+        assertFalse(options.shouldOutputMIDI(), "MIDI output flag is set when -p is given");
+        assertFalse(options.shouldOutputWAV(), "WAVE output flag is set when -p is given");
     }
 
     @Test
     public void outputMIDIFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "--midi"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertTrue("MIDI output flag not set when --midi is given", options.shouldOutputMIDI());
-        assertFalse("Play flag is set when --midi is given", options.shouldPlayLive());
-        assertFalse("WAVE output flag is set when --midi is given", options.shouldOutputWAV());
+        assertTrue(options.shouldOutputMIDI(), "MIDI output flag not set when --midi is given");
+        assertFalse(options.shouldPlayLive(), "Play flag is set when --midi is given");
+        assertFalse(options.shouldOutputWAV(), "WAVE output flag is set when --midi is given");
     }
 
     @Test
     public void outputMIDIShortFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "-mid"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertTrue("MIDI output flag not set when -mid is given", options.shouldOutputMIDI());
-        assertFalse("Play flag is set when -mid is given", options.shouldPlayLive());
-        assertFalse("WAVE output flag is set when -mid is given", options.shouldOutputWAV());
+        assertTrue(options.shouldOutputMIDI(), "MIDI output flag not set when -mid is given");
+        assertFalse(options.shouldPlayLive(), "Play flag is set when -mid is given");
+        assertFalse(options.shouldOutputWAV(), "WAVE output flag is set when -mid is given");
     }
 
     @Test
     public void outputWAVEFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "--wave"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertTrue("WAVE output flag not set when --wave is given", options.shouldOutputWAV());
-        assertFalse("Play flag is set when --wave is given", options.shouldPlayLive());
-        assertFalse("MIDI output flag is set when --wave is given", options.shouldOutputMIDI());
+        assertTrue(options.shouldOutputWAV(), "WAVE output flag not set when --wave is given");
+        assertFalse(options.shouldPlayLive(), "Play flag is set when --wave is given");
+        assertFalse(options.shouldOutputMIDI(), "MIDI output flag is set when --wave is given");
     }
 
     @Test
     public void outputWAVEShortFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "-wav"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertTrue("WAVE output flag not set when -wav is given", options.shouldOutputWAV());
-        assertFalse("Play flag is set when -wav is given", options.shouldPlayLive());
-        assertFalse("MIDI output flag is set when -wav is given", options.shouldOutputMIDI());
+        assertTrue(options.shouldOutputWAV(), "WAVE output flag not set when -wav is given");
+        assertFalse(options.shouldPlayLive(), "Play flag is set when -wav is given");
+        assertFalse(options.shouldOutputMIDI(), "MIDI output flag is set when -wav is given");
     }
 
     @Test
     public void multiOutputFlags() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "-wav", "-p", "--midi"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertTrue("WAVE output flag not set when all output flags were given", options.shouldOutputWAV());
-        assertTrue("MIDI output flag not set when all output flags were given", options.shouldOutputMIDI());
-        assertTrue("Play live output flag not set when all output flags were given", options.shouldPlayLive());
+        assertTrue(options.shouldOutputWAV(), "WAVE output flag not set when all output flags were given");
+        assertTrue(options.shouldOutputMIDI(), "MIDI output flag not set when all output flags were given");
+        assertTrue(options.shouldPlayLive(), "Play live output flag not set when all output flags were given");
     }
 
     @Test
     public void silentFlag() throws Exception {
-        String[] args = new String[] {
+        String[] args = new String[]{
                 "--silent"
         };
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertTrue("Silent flag not set when --silent is given", options.wantsSilent());
+        assertTrue(options.wantsSilent(), "Silent flag not set when --silent is given");
     }
 
     @Test
     public void defaults() throws Exception {
-        String[] args = new String[] { };
+        String[] args = new String[]{};
 
         CompilerOptions options = ArgParser.parse(args);
 
-        assertEquals("Time signature is not 4/4 by default", 4, options.getTimeSignatureTop());
-        assertEquals("Time signature is not 4/4 by default", 4, options.getTimeSignatureBottom());
+        assertEquals(4, options.getTimeSignatureTop(), "Time signature is not 4/4 by default");
+        assertEquals(4, options.getTimeSignatureBottom(), "Time signature is not 4/4 by default");
 
-        assertEquals("Tempo is not 120 by default", 120, options.getTempo());
+        assertEquals(120, options.getTempo(), "Tempo is not 120 by default");
 
-        assertEquals("Output directory is not the working directory by default", "", options.getOutputDirectory());
+        assertEquals("", options.getOutputDirectory(), "Output directory is not the working directory by default");
 
-        assertTrue("Source directories are not empty by default", options.getSourceDirs().isEmpty());
+        assertTrue(options.getSourceDirs().isEmpty(), "Source directories are not empty by default");
 
-        assertTrue("Sound fonts are not empty by default", options.getSoundFonts().isEmpty());
+        assertTrue(options.getSoundFonts().isEmpty(), "Sound fonts are not empty by default");
 
-        assertFalse("Play flag not disabled by default", options.shouldPlayLive());
-        assertTrue("MIDI output flag not enabled by default", options.shouldOutputMIDI());
-        assertFalse("WAVE output flag not disabled by default", options.shouldOutputWAV());
+        assertFalse(options.shouldPlayLive(), "Play flag not disabled by default");
+        assertTrue(options.shouldOutputMIDI(), "MIDI output flag not enabled by default");
+        assertFalse(options.shouldOutputWAV(), "WAVE output flag not disabled by default");
 
-        assertFalse("Silent not disabled by default", options.wantsSilent());
+        assertFalse(options.wantsSilent(), "Silent not disabled by default");
     }
 }

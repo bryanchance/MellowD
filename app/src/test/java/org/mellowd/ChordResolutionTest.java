@@ -3,22 +3,23 @@
 
 package org.mellowd;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.Parameter;
+import org.junit.jupiter.params.ParameterizedClass;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mellowd.primitives.Chord;
 import org.mellowd.primitives.Pitch;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(Parameterized.class)
+@ParameterizedClass(name = "{index}: {0}")
+@MethodSource("loadTests")
 public class ChordResolutionTest {
 
-    @Parameterized.Parameters(name = "{index}: {0}")
     public static Collection<Object[]> loadTests() throws IOException {
         return Arrays.asList(new Object[][]{
                 {"Cmaj", Chord.major(Pitch.C)}, {"Cmin", Chord.minor(Pitch.C)},
@@ -32,15 +33,15 @@ public class ChordResolutionTest {
         });
     }
 
-    @Parameterized.Parameter
+    @Parameter(0)
     public String chordDesc;
 
-    @Parameterized.Parameter(1)
+    @Parameter(1)
     public Chord chord;
 
     @Test
     public void resolve() throws Exception {
         Chord chord = Chord.resolve(chordDesc);
-        assertEquals("Expected "+this.chord+" but resolved "+chordDesc+" to "+chord, this.chord, chord);
+        assertEquals(this.chord, chord, "Expected " + this.chord + " but resolved " + chordDesc + " to " + chord);
     }
 }

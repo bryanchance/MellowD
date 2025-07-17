@@ -3,6 +3,9 @@
 
 package org.mellowd;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedClass;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mellowd.io.Compiler;
 import org.mellowd.io.CompilerOptions;
 import org.mellowd.compiler.CompilationException;
@@ -10,9 +13,6 @@ import org.mellowd.compiler.ParseException;
 import org.mellowd.compiler.SyntaxErrorReport;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiSystem;
@@ -24,9 +24,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
-@RunWith(Parameterized.class)
+@ParameterizedClass(name = "{index}: {0}")
+@MethodSource("loadTests")
 public class CompilerTest {
 
     //A class used to teach Gson how to parse the input data. Gson used a reflection
@@ -48,7 +49,6 @@ public class CompilerTest {
     //case described in the file. Each `Object[]` is a set of constructor arguments
     //that will be used to create a new `CompilerTest` instance who's [compileTest()](#test-case)
     //will be invoked.
-    @Parameterized.Parameters(name = "{index}: {0}")
     public static Collection<Object[]> loadTests() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("testdata/CompilerTestData.json")));
         Gson gson = new GsonBuilder().create();
@@ -120,12 +120,12 @@ public class CompilerTest {
             fail(message);
         } catch (ParseException e) {
             for (SyntaxErrorReport errorReport : e.getProblems()) {
-                System.out.println(errorReport.getErrorType().toString()+": "+errorReport.getMessage());
+                System.out.println(errorReport.getErrorType().toString() + ": " + errorReport.getMessage());
             }
             fail("Exception while parsing.");
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            fail("Exception thrown while executing. "+e.getMessage());
+            fail("Exception thrown while executing. " + e.getMessage());
         }
     }
 

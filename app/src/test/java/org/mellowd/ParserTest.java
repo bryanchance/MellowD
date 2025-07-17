@@ -12,11 +12,13 @@ package org.mellowd;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedClass;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mellowd.compiler.MellowDLexer;
 import org.mellowd.compiler.MellowDParser;
 
@@ -26,11 +28,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 //This test will use the Parameterized runner. This is a JUnit runner that executes
 //all tests in this class for each test input data returned by [loadTests()](#test-data-loader).
-@RunWith(Parameterized.class)
+@ParameterizedClass(name = "{index}: {1}")
+@MethodSource("loadTests")
 public class ParserTest {
     //This AtomicInteger will track the test number. It is a thread-safe integer that
     //we can keep increasing for each test to give each test an id.
@@ -42,7 +45,6 @@ public class ParserTest {
     //case described in the file. Each `Object[]` is a set of constructor arguments
     //that will be used to create a new `ParserTest` instance who's [parseTest()](#test-case)
     //will be invoked.
-    @Parameterized.Parameters(name = "{index}: {1}")
     public static Collection<Object[]> loadTests() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("testdata/ParserTestData.json")));
         Gson gson = new GsonBuilder().create();
@@ -70,7 +72,7 @@ public class ParserTest {
 
         //Instantiate the lexer and parser. The parser's default error listener
         //needs to be overridden with a custom one to store all error messages.
-        MellowDLexer lexer = new MellowDLexer(new ANTLRInputStream(this.inputStream));
+        MellowDLexer lexer = new MellowDLexer(CharStreams.fromStream(this.inputStream));
 
         this.parser = new MellowDParser(new CommonTokenStream(lexer));
         this.parser.setBuildParseTree(true);

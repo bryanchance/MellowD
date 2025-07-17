@@ -1,8 +1,6 @@
 package org.mellowd;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 import org.mellowd.compiler.MellowDParser;
 import org.mellowd.intermediate.executable.SourceLink;
 import org.mellowd.intermediate.executable.expressions.Expression;
@@ -10,11 +8,12 @@ import org.mellowd.intermediate.executable.expressions.RuntimeTypeCheck;
 import org.mellowd.testutil.CompilerTestFrame;
 import org.mellowd.testutil.DummyEnvironment;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-@RunWith(JUnit4.class)
+
 public class BooleanTest extends CompilerTestFrame {
-    private class TestCase {
+    private static class TestCase {
         String src;
         boolean expected;
 
@@ -57,10 +56,10 @@ public class BooleanTest extends CompilerTestFrame {
                 fail("Error while parsing \"" + testCase.src + "\"");
             } else {
                 testCase.print(val);
-                    System.out.println("\t" + ctx.toStringTree(parser));
+                System.out.println("\t" + ctx.toStringTree(parser));
             }
 
-            assertEquals(testCase.src, val, testCase.expected);
+            assertEquals(val, testCase.expected, testCase.src);
         }
     }
 

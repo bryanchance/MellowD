@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 //This error listener simply remembers the errors that occurred during parsing.
 public class TestErrorListener extends BaseErrorListener {

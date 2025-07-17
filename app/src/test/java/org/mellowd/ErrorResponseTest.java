@@ -3,30 +3,31 @@
 
 package org.mellowd;
 
-import org.antlr.v4.runtime.ANTLRFileStream;
-import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
+import org.mellowd.compiler.CompilationException;
+import org.mellowd.compiler.MellowD;
+import org.mellowd.compiler.MellowDCompiler;
+import org.mellowd.compiler.MellowDLexer;
+import org.mellowd.compiler.MellowDParser;
 import org.mellowd.midi.TimingEnvironment;
-import org.mellowd.compiler.*;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 //This class runs various tests with various erroneous inputs and verifying that
 //the compiler catches the issue and responds appropriately.
-@RunWith(JUnit4.class)
 public class ErrorResponseTest {
 
     //The tests will require the instantiation of quite a few parsers so we will define
     //some helper methods for creating parsers from a file input or a string.
     private static MellowDParser parserFor(File input) throws IOException {
-        ANTLRFileStream inStream = new ANTLRFileStream(input.getAbsolutePath());
+        CharStream inStream = CharStreams.fromPath(input.toPath());
         MellowDLexer lexer = new MellowDLexer(inStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         MellowDParser parser = new MellowDParser(tokenStream);
@@ -35,7 +36,7 @@ public class ErrorResponseTest {
     }
 
     private static MellowDParser parserFor(String input) {
-        ANTLRInputStream inStream = new ANTLRInputStream(input);
+        CharStream inStream = CharStreams.fromString(input);
         MellowDLexer lexer = new MellowDLexer(inStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         MellowDParser parser = new MellowDParser(tokenStream);
@@ -60,10 +61,10 @@ public class ErrorResponseTest {
     @Test
     public void noTargetCrescendo() throws Exception {
         MellowDParser parser = parserFor("" +
-                "def block myblock\n" +
-                "myblock{" +
-                "    pp << [a, b, c]*<q> " +
-                "}"
+                                         "def block myblock\n" +
+                                         "myblock{" +
+                                         "    pp << [a, b, c]*<q> " +
+                                         "}"
         );
         try {
             parseAndCompileSong(parser).execute();
@@ -80,12 +81,12 @@ public class ErrorResponseTest {
     @Test
     public void crescendoTargetNextFragment() throws Exception {
         MellowDParser parser = parserFor("" +
-                "def block myblock\n" +
-                "myblock{" +
-                "    pp << [a, b, c]*<q> " +
-                "}myblock{" +
-                "    ff" +
-                "}");
+                                         "def block myblock\n" +
+                                         "myblock{" +
+                                         "    pp << [a, b, c]*<q> " +
+                                         "}myblock{" +
+                                         "    ff" +
+                                         "}");
         try {
             parseAndCompileSong(parser).execute();
         } catch (CompilationException e) {
@@ -96,10 +97,10 @@ public class ErrorResponseTest {
     @Test
     public void crescendoToLowerDynamic() throws Exception {
         MellowDParser parser = parserFor("" +
-                "def block myblock\n" +
-                "myblock{" +
-                "    f << [a]*<q> pp" +
-                "}");
+                                         "def block myblock\n" +
+                                         "myblock{" +
+                                         "    f << [a]*<q> pp" +
+                                         "}");
 
         try {
             parseAndCompileSong(parser).execute();
@@ -109,7 +110,7 @@ public class ErrorResponseTest {
         }
 
         fail("Expected an error due to a crescendo being specified by the volume decreasing but nothing" +
-                "was thrown.");
+             "was thrown.");
     }
 
     //Due to the GM specifications we are restricted in the number of channels available. If
@@ -123,7 +124,7 @@ public class ErrorResponseTest {
         try {
             parseAndCompileSong(parser).execute();
             fail("Expected largeInput.mlod to throw a NoSuchElementException about too many channels but" +
-                    "it didn't.");
+                 "it didn't.");
         } catch (IllegalStateException e) {
             printExpectedError(e);
         }
@@ -138,11 +139,11 @@ public class ErrorResponseTest {
     @Test
     public void rhythmCrossRhythm() throws Exception {
         MellowDParser parser = parserFor("" +
-                "def block myblock\n" +
-                "myChord -> <q, q, q>" +
-                "myblock{" +
-                "    myChord*<q>" +
-                "}");
+                                         "def block myblock\n" +
+                                         "myChord -> <q, q, q>" +
+                                         "myblock{" +
+                                         "    myChord*<q>" +
+                                         "}");
 
         try {
             parseAndCompileSong(parser).execute();
@@ -158,11 +159,11 @@ public class ErrorResponseTest {
     @Test
     public void chordMelodyConcatenation() throws Exception {
         MellowDParser parser = parserFor("" +
-                "def block myblock\n" +
-                "myChord -> [a, b, c]" +
-                "myblock{" +
-                "    [(myChord, a)]*<q>" +
-                "}");
+                                         "def block myblock\n" +
+                                         "myChord -> [a, b, c]" +
+                                         "myblock{" +
+                                         "    [(myChord, a)]*<q>" +
+                                         "}");
 
         try {
             parseAndCompileSong(parser).execute();
@@ -178,12 +179,12 @@ public class ErrorResponseTest {
     @Test
     public void secondIdentIncorrect() throws Exception {
         MellowDParser parser = parserFor("" +
-                "def block myblock\n" +
-                "myMel -> [a, b, c]" +
-                "myChord -> (c, e, g)" +
-                "myblock{" +
-                "    [(myChord, myMel, a)]*<q>" +
-                "}");
+                                         "def block myblock\n" +
+                                         "myMel -> [a, b, c]" +
+                                         "myChord -> (c, e, g)" +
+                                         "myblock{" +
+                                         "    [(myChord, myMel, a)]*<q>" +
+                                         "}");
 
         try {
             parseAndCompileSong(parser).execute();
@@ -199,10 +200,10 @@ public class ErrorResponseTest {
     @Test
     public void baseOverridePercussion() throws Exception {
         MellowDParser parser = parserFor("" +
-                "def percussion block myblock\n" +
-                "hHat -> <q>" +
-                "sample ->* [hHat, tri, lBongo]" +
-                "myblock { sample*<q> }");
+                                         "def percussion block myblock\n" +
+                                         "hHat -> <q>" +
+                                         "sample ->* [hHat, tri, lBongo]" +
+                                         "myblock { sample*<q> }");
 
         try {
             parseAndCompileSong(parser).execute();

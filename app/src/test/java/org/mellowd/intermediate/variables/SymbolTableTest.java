@@ -1,16 +1,13 @@
 package org.mellowd.intermediate.variables;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mellowd.intermediate.QualifiedName;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-@RunWith(JUnit4.class)
 public class SymbolTableTest {
     private QualifiedName sampleName = QualifiedName.ofUnqualified("Sample");
     private QualifiedName sample1Name = QualifiedName.ofUnqualified("Sample1");
@@ -19,13 +16,13 @@ public class SymbolTableTest {
     private SymbolTable superTable;
     private Memory table;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         this.superTable = new SymbolTable();
         this.table = new SymbolTable(superTable);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         this.superTable = null;
         this.table = null;
@@ -99,8 +96,7 @@ public class SymbolTableTest {
             this.table.define(sampleName, 20);
             fail("No exception thrown when trying to redefine a constant");
         } catch (AlreadyDefinedException e) {
-            assertEquals("Exception thrown but constant value still changed",
-                    10, this.table.get(sampleName));
+            assertEquals(10, this.table.get(sampleName), "Exception thrown but constant value still changed");
         }
     }
 
@@ -112,8 +108,7 @@ public class SymbolTableTest {
             this.table.set(sampleName, 20);
             fail("No exception thrown when trying to set a value to a constant");
         } catch (AlreadyDefinedException e) {
-            assertEquals("Exception thrown but constant value still changed",
-                    10, this.table.get(sampleName));
+            assertEquals(10, this.table.get(sampleName), "Exception thrown but constant value still changed");
         }
     }
 
@@ -125,8 +120,7 @@ public class SymbolTableTest {
             this.table.define(sampleName, 20);
             fail("No exception thrown when trying to define a constant over a value");
         } catch (AlreadyDefinedException e) {
-            assertEquals("Exception thrown but value still changed",
-                    10, this.table.get(sampleName));
+            assertEquals(10, this.table.get(sampleName), "Exception thrown but value still changed");
         }
     }
 

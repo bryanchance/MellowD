@@ -1,8 +1,6 @@
 package org.mellowd.intermediate.executable.expressions;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 import org.mellowd.primitives.Pitch;
 import org.mellowd.testutil.DummyEnvironment;
 
@@ -10,20 +8,31 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(JUnit4.class)
 public class BooleanExpressionTest {
 
     @Test
     public void shortCircuitAND() throws Exception {
         BitSet expressionsExecuted = new BitSet();
         List<Expression<Boolean>> exprs = Arrays.asList(
-                Expression.lift(env-> { expressionsExecuted.set(0); return true; }),
-                Expression.lift(env -> { expressionsExecuted.set(1); return false; }),
-                Expression.lift(env -> { expressionsExecuted.set(2); return true; }),
-                Expression.lift(env -> { expressionsExecuted.set(3); return false; })
+                Expression.lift(env -> {
+                    expressionsExecuted.set(0);
+                    return true;
+                }),
+                Expression.lift(env -> {
+                    expressionsExecuted.set(1);
+                    return false;
+                }),
+                Expression.lift(env -> {
+                    expressionsExecuted.set(2);
+                    return true;
+                }),
+                Expression.lift(env -> {
+                    expressionsExecuted.set(3);
+                    return false;
+                })
         );
 
         BooleanANDChain and = new BooleanANDChain(exprs);
@@ -31,24 +40,32 @@ public class BooleanExpressionTest {
         and.evaluate(DummyEnvironment.getInstance());
 
         String msg = "%s expression %s executed in ( true & false & true & false )";
-        assertTrue(String.format(msg, "First", "not"),
-                expressionsExecuted.get(0));
-        assertTrue(String.format(msg, "Second", "not"),
-                expressionsExecuted.get(1));
-        assertFalse(String.format(msg, "Third", "was"),
-                expressionsExecuted.get(2));
-        assertFalse(String.format(msg, "Fourth", "was"),
-                expressionsExecuted.get(3));
+        assertTrue(expressionsExecuted.get(0), String.format(msg, "First", "not"));
+        assertTrue(expressionsExecuted.get(1), String.format(msg, "Second", "not"));
+        assertFalse(expressionsExecuted.get(2), String.format(msg, "Third", "was"));
+        assertFalse(expressionsExecuted.get(3), String.format(msg, "Fourth", "was"));
     }
 
     @Test
     public void shortCircuitOR() throws Exception {
         BitSet expressionsExecuted = new BitSet();
         List<Expression<Boolean>> exprs = Arrays.asList(
-                Expression.lift(env -> { expressionsExecuted.set(0); return false; }),
-                Expression.lift(env -> { expressionsExecuted.set(1); return true; }),
-                Expression.lift(env -> { expressionsExecuted.set(2); return false; }),
-                Expression.lift(env -> { expressionsExecuted.set(3); return true; })
+                Expression.lift(env -> {
+                    expressionsExecuted.set(0);
+                    return false;
+                }),
+                Expression.lift(env -> {
+                    expressionsExecuted.set(1);
+                    return true;
+                }),
+                Expression.lift(env -> {
+                    expressionsExecuted.set(2);
+                    return false;
+                }),
+                Expression.lift(env -> {
+                    expressionsExecuted.set(3);
+                    return true;
+                })
         );
 
         BooleanORChain or = new BooleanORChain(exprs);
@@ -56,14 +73,10 @@ public class BooleanExpressionTest {
         or.evaluate(DummyEnvironment.getInstance());
 
         String msg = "%s expression %s executed in ( false | true | false | true )";
-        assertTrue(String.format(msg, "First", "not"),
-                expressionsExecuted.get(0));
-        assertTrue(String.format(msg, "Second", "not"),
-                expressionsExecuted.get(1));
-        assertFalse(String.format(msg, "Third", "was"),
-                expressionsExecuted.get(2));
-        assertFalse(String.format(msg, "Fourth", "was"),
-                expressionsExecuted.get(3));
+        assertTrue(expressionsExecuted.get(0), String.format(msg, "First", "not"));
+        assertTrue(expressionsExecuted.get(1), String.format(msg, "Second", "not"));
+        assertFalse(expressionsExecuted.get(2), String.format(msg, "Third", "was"));
+        assertFalse(expressionsExecuted.get(3), String.format(msg, "Fourth", "was"));
     }
 
     @Test
@@ -96,12 +109,9 @@ public class BooleanExpressionTest {
         Expression<Boolean> evalDouble = new BooleanEvaluationExpression(Expression.lift(env -> 30.0));
         Expression<Boolean> evalByte = new BooleanEvaluationExpression(Expression.lift(env -> (byte) 1));
 
-        assertTrue("boolEval(10)",
-                evalInt.evaluate(DummyEnvironment.getInstance()));
-        assertTrue("boolEval(30.0)",
-                evalDouble.evaluate(DummyEnvironment.getInstance()));
-        assertTrue("boolEval((byte) 1)",
-                evalByte.evaluate(DummyEnvironment.getInstance()));
+        assertTrue(evalInt.evaluate(DummyEnvironment.getInstance()), "boolEval(10)");
+        assertTrue(evalDouble.evaluate(DummyEnvironment.getInstance()), "boolEval(30.0)");
+        assertTrue(evalByte.evaluate(DummyEnvironment.getInstance()), "boolEval((byte) 1)");
     }
 
     @Test
@@ -110,44 +120,37 @@ public class BooleanExpressionTest {
         Expression<Boolean> evalDouble = new BooleanEvaluationExpression(Expression.lift(env -> 0.0));
         Expression<Boolean> evalByte = new BooleanEvaluationExpression(Expression.lift(env -> (byte) 0));
 
-        assertFalse("boolEval(0)",
-                evalInt.evaluate(DummyEnvironment.getInstance()));
-        assertFalse("boolEval(0.0)",
-                evalDouble.evaluate(DummyEnvironment.getInstance()));
-        assertFalse("boolEval((byte) 0)",
-                evalByte.evaluate(DummyEnvironment.getInstance()));
+        assertFalse(evalInt.evaluate(DummyEnvironment.getInstance()), "boolEval(0)");
+        assertFalse(evalDouble.evaluate(DummyEnvironment.getInstance()), "boolEval(0.0)");
+        assertFalse(evalByte.evaluate(DummyEnvironment.getInstance()), "boolEval((byte) 0)");
     }
 
     @Test
     public void boolEvalPitchRest() throws Exception {
         Expression<Boolean> eval = new BooleanEvaluationExpression(Expression.lift(env -> Pitch.REST));
 
-        assertFalse("boolEval(Pitch.REST)",
-                eval.evaluate(DummyEnvironment.getInstance()));
+        assertFalse(eval.evaluate(DummyEnvironment.getInstance()), "boolEval(Pitch.REST)");
     }
 
     @Test
     public void boolEvalPitch() throws Exception {
         Expression<Boolean> eval = new BooleanEvaluationExpression(Expression.lift(env -> Pitch.A));
 
-        assertTrue("boolEval(Pitch.A)",
-                eval.evaluate(DummyEnvironment.getInstance()));
+        assertTrue(eval.evaluate(DummyEnvironment.getInstance()), "boolEval(Pitch.A)");
     }
 
     @Test
     public void boolEvalNull() throws Exception {
         Expression<Boolean> eval = new BooleanEvaluationExpression(Expression.lift(env -> null));
 
-        assertFalse("boolEval(null)",
-                eval.evaluate(DummyEnvironment.getInstance()));
+        assertFalse(eval.evaluate(DummyEnvironment.getInstance()), "boolEval(null)");
     }
 
     @Test
     public void boolEvalNonNullObject() throws Exception {
         Expression<Boolean> eval = new BooleanEvaluationExpression(Expression.lift(env -> new Object()));
 
-        assertTrue("boolEval(new Object())",
-                eval.evaluate(DummyEnvironment.getInstance()));
+        assertTrue(eval.evaluate(DummyEnvironment.getInstance()), "boolEval(new Object())");
     }
 
 
