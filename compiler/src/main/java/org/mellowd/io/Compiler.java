@@ -50,7 +50,7 @@ public class Compiler {
     static {
         Properties metadata = new Properties();
         try {
-            metadata.load(Compiler.class.getResourceAsStream("/metadata.properties"));
+            metadata.load(Compiler.class.getResourceAsStream("/mellowd-compiler-metadata.properties"));
         } catch (IOException ignored) { }
 
         VERSION = metadata.getProperty("version", "UNKNOWN");

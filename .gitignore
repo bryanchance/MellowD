@@ -16,3 +16,5 @@ gen/
 out/
 
 docs/
+
+.DS_Store

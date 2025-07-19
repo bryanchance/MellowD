@@ -24,7 +24,7 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -51,7 +51,7 @@ tasks.compileJava {
 }
 
 tasks.processResources {
-    filesMatching("metadata.properties") {
+    filesMatching("mellowd-compiler-metadata.properties") {
         expand("projectVersion" to project.version)
     }
 }
